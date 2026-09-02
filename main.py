@@ -1,92 +1,80 @@
-import random
-from components.criatura.criatura import Criatura
-from components.player.treinador import Treinador, Sexo
+import os
+import sys
+import json
 from components.criatura.iniciais import escolher_inicial
-from components.mecanicas.batalha import iniciar_batalha
-from components.criatura.criaturas_selvagens import lista_criaturas_selvagens
-from criatura.criaturas_selvagens import BIOMAS_DISPONIVEIS, sortear_criatura_selvagem
+from components.player.treinador import Treinador, Sexo
+from components.mecanicas.acoes import menu_explorar, menu_missoes, menu_equipe
+from components.save import salvar_jogo, carregar_jogo
 
+jogador = None
 
-def main():
-    print("\n==== BEM VINDO AO JOGO ===")
-    print("\n== CRIATURAS ESQUISITAS ==")
+if os.path.exists("save.json"):
+    resposta = input("Foi encontrado um save. Deseja carregar? (S/N): ").strip().upper()
+    if resposta == "S":
+        jogador = carregar_jogo()
+
+if jogador is None:
+    while True:
+        nome_jogador = input("Digite o nome do seu personagem (máx. 12 caracteres): ").strip()
+        if not nome_jogador:
+            print("O nome não pode ser vazio.")
+            continue
+        if len(nome_jogador) > 12:
+            print("O nome deve ter no máximo 12 caracteres.")
+            continue
+        break
 
     while True:
-        print("\nPor favor escolha seu gênero digitando H ou F")
-        escolha_genero = input("Escolha seu gênero: ").upper()
-
-        if escolha_genero == "H":
-            jogador = Treinador(nome="Aventureiro", sexo=Sexo.MASCULINO, idade=15)
+        escolha_sexo = input("Escolha o sexo do personagem (H/F): ").strip().upper()
+        if escolha_sexo == "H":
+            sexo_jogador = Sexo.MASCULINO
             break
-        elif escolha_genero == "F":
-            jogador = Treinador(nome="Aventureira", sexo=Sexo.FEMININO, idade=15)
+        elif escolha_sexo == "F":
+            sexo_jogador = Sexo.FEMININO
             break
         else:
-            print("\nPor favor escolha entre H ou F!")
-            continue
+            print("Opção inválida. Digite H ou F.")
+
+    jogador = Treinador(nome=nome_jogador, sexo=sexo_jogador, idade=16)
 
     escolher_inicial(jogador)
+
+    if not jogador.time:
+        print("\nVocê saiu da escolha de criatura inicial.")
+        sys.exit()
+
+    jogador.dinheiro = 200
     jogador.adicionar_item("Poção de Cura", 3)
-    jogador.adicionar_item("Isca", 0)
+    jogador.adicionar_item("Isca de Captura", 3)
 
-    if len(jogador.criaturas) == 0:
-        print("\nO jogador encerrou o jogo sem escolher um inicial.")
-        return
+while True:
+    print("\n===== MENU PRINCIPAL =====")
+    print("1 - Explorar")
+    print("2 - Ver equipe")
+    print("3 - Ver inventário")
+    print("4 - Salvar Jogo")
+    print("5 - Sair")
 
-    while True:
-        print("\n" + "=" * 30)
-        print("--- MENU PRINCIPAL ---")
-        print("1 - Explorar o mapa (Batalhar!)")
-        print("2 - Ver minha Equipe")
-        print("3 - Ver Inventario")
-        print("4 - Sair do Jogo")
-        print("=" * 30)
+    acao = input("Escolha uma opção: ")
 
-        acao = input("O que deseja fazer? ")
+    if acao == "1":
+        menu_explorar(jogador)
 
-        if acao == "1":
-            print("\nEscolha o bioma para explorar:")
-            for i, bioma in enumerate(BIOMAS_DISPONIVEIS, start=1):
-                print(f"{i} - {bioma}")
+    elif acao == "2":
+        menu_equipe(jogador)
 
-            escolha_bioma = input("Bioma: ")
-            try:
-                bioma_escolhido = BIOMAS_DISPONIVEIS[int(escolha_bioma) - 1]
-            except (ValueError, IndexError):
-                print("\nBioma inválido!")
-                continue
-            inimigo = sortear_criatura_selvagem(bioma_escolhido)
-            if inimigo is None:
-                print(f"\nNenhuma criatura encontrada em {bioma_escolhido} dessa vez...")
-                continue
+    elif acao == "3":
+        print(f"\n--- INVENTÁRIO --- (Dinheiro: ${jogador.dinheiro})")
+        for item, qtd in jogador.inventario.items():
+            print(f"{item}: {qtd}")
 
-            aliado = jogador.criaturas[0]
-            iniciar_batalha(aliado, inimigo, jogador)
+    elif acao == "4":
+        salvar_jogo(jogador)
+        print("Jogo salvo com sucesso!")
 
-            if aliado.hp <= 0:
-                print("\nSeu monstro desmaiou! Você correu para o Centro de Cura...")
-                aliado.hp = aliado.hp_maximo
+    elif acao == "5":
+        print("Até a próxima!")
+        break
 
-        elif acao == "2":
-            print(f"\nResumo da equipe de {jogador.nome}:")
-            for criatura in jogador.criaturas:
-                criatura.exibir_status_criatura()
-
-        elif acao == "3":
-            print(f"\nInventário de {jogador.nome}:")
-            if not jogador.inventario:
-                print("vazio")
-            else:
-                for item, qtd in jogador.inventario.items():
-                    print(f"{item}: {qtd}")
-
-        elif acao == "4":
-            print(f"\nSalvando aventura... Até a próxima!")
-            break
-
-        else:
-            print("\nComando inválido!")
-
-
-if __name__ == "__main__":
-    main()
+    else:
+        print("Opção inválida.")

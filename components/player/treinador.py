@@ -1,6 +1,7 @@
 from enum import Enum
 from statistics import quantiles
 
+TAMANHO_MAXIMO_TIME = 3
 
 class Sexo(Enum):
     MASCULINO = "Masculino"
@@ -13,11 +14,18 @@ class Treinador:
         self.idade = idade
         self.dinheiro = dinheiro
         self.inventario = {}
-        self.criaturas = []
+        self.missoes = []
+        self.time = []
+        self.criaturas_capturadas = []
 
-    def adicionar_criatura_treinador(self, criatura: str):
-        self.criaturas.append(criatura)
-        print(f"{criatura.nome} foi adicionada a sua equipe!")
+
+    def adicionar_criatura_treinador(self, criatura):
+        if len(self.time) < TAMANHO_MAXIMO_TIME:
+            self.time.append(criatura)
+            print(f"{criatura.nome} foi adicionado ao seu time!")
+        else:
+            self.criaturas_capturadas.append(criatura)
+            print(f"Seu time está cheio! {criatura.nome} foi enviada para seu santuário!")
 
     def adicionar_item(self, nome_item: str, quantidade: int=1):
         self.inventario[nome_item] = self.inventario.get(nome_item, 0) + quantidade
@@ -32,6 +40,9 @@ class Treinador:
             return False
         self.inventario[nome_item] -= 1
         return True
+
+    def pode_receber_missao(self) -> bool:
+        return len(self.missoes) < 3
 
 
 

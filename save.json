@@ -1,0 +1,30 @@
+{
+  "nome": "mnb",
+  "sexo": "Masculino",
+  "idade": 16,
+  "dinheiro": 274,
+  "inventario": {
+    "Poção de Cura": 3,
+    "Isca de Captura": 3
+  },
+  "criaturas": [
+    {
+      "nome": "Solenodonte",
+      "hp": 30,
+      "hp_maximo": 30,
+      "ataque": 36,
+      "defesa": 16,
+      "velocidade": 36,
+      "energia": 10,
+      "energia_max": 21,
+      "classe": "Rara",
+      "biomas": {
+        "Floresta": 70,
+        "Pântano": 15
+      },
+      "nivel": 4,
+      "xp": 45,
+      "level_up": 86
+    }
+  ]
+}
