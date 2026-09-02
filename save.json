@@ -2,29 +2,48 @@
   "nome": "mnb",
   "sexo": "Masculino",
   "idade": 16,
-  "dinheiro": 274,
+  "dinheiro": 200,
   "inventario": {
     "Poção de Cura": 3,
-    "Isca de Captura": 3
+    "Isca de Captura": 3,
+    "Armadilha Especial": 0
   },
   "criaturas": [
     {
       "nome": "Solenodonte",
-      "hp": 30,
-      "hp_maximo": 30,
-      "ataque": 36,
-      "defesa": 16,
-      "velocidade": 36,
+      "hp": 40,
+      "hp_maximo": 40,
+      "ataque": 40,
+      "defesa": 20,
+      "velocidade": 40,
       "energia": 10,
-      "energia_max": 21,
+      "energia_max": 25,
       "classe": "Rara",
       "biomas": {
         "Floresta": 70,
         "Pântano": 15
       },
-      "nivel": 4,
-      "xp": 45,
-      "level_up": 86
+      "nivel": 6,
+      "xp": 20,
+      "level_up": 123
+    },
+    {
+      "nome": "Rã-Titicaca",
+      "hp": 35,
+      "hp_maximo": 35,
+      "ataque": 10,
+      "defesa": 30,
+      "velocidade": 10,
+      "energia": 15,
+      "energia_max": 15,
+      "classe": "Criticamente Rara",
+      "biomas": {
+        "Rio": 60,
+        "Pântano": 30
+      },
+      "nivel": 1,
+      "xp": 0,
+      "level_up": 50
     }
   ]
 }

@@ -17,6 +17,7 @@ class Treinador:
         self.missoes = []
         self.time = []
         self.criaturas_capturadas = []
+        self.armadilhas_ativas = {}
 
 
     def adicionar_criatura_treinador(self, criatura):
@@ -43,21 +44,4 @@ class Treinador:
 
     def pode_receber_missao(self) -> bool:
         return len(self.missoes) < 3
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    

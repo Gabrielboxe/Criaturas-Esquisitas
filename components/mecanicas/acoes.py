@@ -1,9 +1,8 @@
-from components.criatura.criaturas_selvagens import sortear_criatura_selvagem
+from components.criatura.criaturas_selvagens import sortear_criatura_selvagem, BIOMAS_DISPONIVEIS
 from components.mecanicas.batalha import iniciar_batalha
 from components.mecanicas.missoes import gerar_missao
-from criatura.criaturas_selvagens import BIOMAS_DISPONIVEIS
-from mecanicas.missoes import Missao
-
+from components.mecanicas.loja import menu_loja, NOMES_ARMADILHAS
+from components.mecanicas.armadilhas import tentar_capturar
 
 def menu_explorar(jogador):
     while True:
@@ -23,7 +22,7 @@ def menu_explorar(jogador):
         elif escolha == "2":
             menu_missoes(jogador)
         elif escolha == "3":
-            print("\nHm... parece que a loja não abriu ainda.")
+            menu_loja(jogador)
         elif escolha == "4":
             curar_equipe(jogador)
         elif escolha =="5":
@@ -43,10 +42,28 @@ def menu_bioma(jogador):
         print("\nBioma Inválido!")
         return
 
+    armadilha_ativa = jogador.armadilhas_ativas.get(bioma_escolhido)
+
+    if armadilha_ativa:
+        print(f"\n--- {bioma_escolhido.upper()} ---")
+        print(f"Há uma {armadilha_ativa['tipo']} armada aqui, esperando a criatura...")
+        print("Melhor deixar o bioma silencioso se quiser que a armadilha funcione...")
+
+        if armadilha_ativa["pronta"]:
+            print("1 - Checar armadilha")
+            print("2 - Voltar")
+            acao_armadilha = input("O que deseja fazer? ")
+            if acao_armadilha == "1":
+                checar_armadilha(jogador, bioma_escolhido)
+            return
+        else:
+            print("A armadilha ainda não está pronta. Volte depois de uma batalha.")
+            return
+
     while True:
         print(f"\n--- {bioma_escolhido.upper()} ---")
         print("1 - Encontrar criatura")
-        print("2 - Colocar armadilha ")
+        print("2 - Colocar armadilha")
         print("3 - Voltar")
 
         acao_bioma = input("O que deseja fazer? ")
@@ -55,7 +72,8 @@ def menu_bioma(jogador):
             encontrar_criatura(jogador, bioma_escolhido)
             return
         elif acao_bioma == "2":
-            print("\nAinda não temos permissões para montar armadilhas.")
+            colocar_armadilha(jogador, bioma_escolhido)
+            return
         elif acao_bioma == "3":
             return
         else:
@@ -70,6 +88,9 @@ def encontrar_criatura(jogador, bioma):
     aliado = jogador.time[0]
     iniciar_batalha(aliado, inimigo, jogador)
 
+    for armadilha in jogador.armadilhas_ativas.values():
+        armadilha["pronta"] = True
+
     if aliado.hp <= 0:
         print("\nSua criatura desmaiou, você correu para o Veterinário...")
         aliado.hp = aliado.hp_maximo
@@ -81,6 +102,52 @@ def encontrar_criatura(jogador, bioma):
             print(f"\nMissão concluída! Você recebeu ${missao.recompensa}")
 
     jogador.missoes = [m for m in jogador.missoes if not m.concluida]
+
+def colocar_armadilha(jogador, bioma):
+    tipos_disponiveis = [nome for nome in NOMES_ARMADILHAS if jogador.tem_item(nome)]
+
+    if not tipos_disponiveis:
+        print("\nVocê não tem nenhuma armadilha no inventário. Compre uma na loja!")
+        return
+
+    print("\nQual armadilha deseja usar?")
+    for i, nome in enumerate(tipos_disponiveis, start=1):
+        print(f"{i} - {nome} ({jogador.inventario.get(nome, 0)} disponíveis)")
+
+    escolha = input("Escolha: ")
+    try:
+        nome_armadilha = tipos_disponiveis[int(escolha) - 1]
+    except (ValueError, IndexError):
+        print("\nComando inválido!")
+        return
+
+    criatura_alvo = sortear_criatura_selvagem(bioma)
+    if criatura_alvo is None:
+        print(f"\nVocê armou a {nome_armadilha}, mas nenhuma criatura parece estar por perto...")
+        return
+
+    jogador.usar_item(nome_armadilha)
+    jogador.armadilhas_ativas[bioma] = {
+        "tipo": nome_armadilha,
+        "criatura": criatura_alvo,
+        "pronta": False,
+    }
+    print(f"\nVocê armou a {nome_armadilha} em {bioma}. Volte depois de uma batalha para checar!")
+
+
+def checar_armadilha(jogador, bioma):
+    armadilha = jogador.armadilhas_ativas.pop(bioma, None)
+    if armadilha is None:
+        return
+
+    criatura = armadilha["criatura"]
+    sucesso = tentar_capturar(armadilha["tipo"], criatura)
+
+    if sucesso:
+        print(f"\nSucesso! Você capturou {criatura.nome}!")
+        jogador.adicionar_criatura_treinador(criatura)
+    else:
+        print(f"\nA armadilha não funcionou dessa vez... {criatura.nome} escapou.")
 
 def menu_missoes(jogador):
     print(f"\nMissões de {jogador.nome}:")

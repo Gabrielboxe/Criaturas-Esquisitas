@@ -1,9 +1,11 @@
 import time
 import random
 
-def calcular_dano(ataque, defesa, multiplicador= 1.0):
+
+def calcular_dano(ataque, defesa, multiplicador=1.0):
     dano_bruto = (ataque * multiplicador) * (100 / (defesa + 100))
     return max(1, int(dano_bruto))
+
 
 def iniciar_batalha(aliado, inimigo, jogador):
     print("\n=====================================")
@@ -25,9 +27,8 @@ def iniciar_batalha(aliado, inimigo, jogador):
             print("2 - Ataque especial (não disponível)")
 
         print("3 - Esquivar")
-        print("4 - Usar Poção de Cura")
-        if jogador.tem_item("Poção de Cura"):
-            print("5 - Fugir do combate")
+        print("4 - Usar Injeção")
+        print("5 - Fugir do combate")
 
         escolha = input("Escolha sua ação (1 a 4): ")
 
@@ -37,8 +38,8 @@ def iniciar_batalha(aliado, inimigo, jogador):
             return
         if escolha == "3":
             acao_aliado = "esquivar"
-        elif escolha == "4" and jogador.tem_item("Poção de Cura"):
-            jogador.usar_item("Poção de Cura")
+        elif escolha == "4" and jogador.tem_item("Injeção"):
+            jogador.usar_item("Injeção")
             cura = 20
             aliado.hp = min(aliado.hp + cura, aliado.hp_maximo)
             print(f"\n{aliado.nome} recuperou {cura} de HP!")

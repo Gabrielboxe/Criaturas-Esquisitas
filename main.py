@@ -44,8 +44,7 @@ if jogador is None:
         sys.exit()
 
     jogador.dinheiro = 200
-    jogador.adicionar_item("Poção de Cura", 3)
-    jogador.adicionar_item("Isca de Captura", 3)
+    jogador.adicionar_item("Injeção", 3)
 
 while True:
     print("\n===== MENU PRINCIPAL =====")
