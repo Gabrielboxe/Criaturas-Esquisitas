@@ -4,6 +4,7 @@ from components.criatura.criatura import Criatura
 from components.player.treinador import Treinador
 
 
+# iniciais.py
 def gerar_solenodonte():
     return Criatura(
         nome="Solenodonte",
@@ -12,6 +13,8 @@ def gerar_solenodonte():
         defesa=10,
         velocidade=30,
         energia=15,
+        classe="Rara",
+        biomas={"Floresta": 70, "Pântano": 15}
     )
 
 def gerar_ornitorrinco():
@@ -22,6 +25,8 @@ def gerar_ornitorrinco():
         defesa=20,
         velocidade=20,
         energia=20,
+        classe="Comum",
+        biomas={"Rio": 85, "Pântano": 30}
     )
 
 def gerar_poraque():
@@ -32,6 +37,7 @@ def gerar_poraque():
         defesa=10,
         velocidade=30,
         energia=35,
+        classe="Abundante", biomas={"Rio": 90}
     )
 
 inicial = None
@@ -43,7 +49,7 @@ def escolher_inicial(treinador: Treinador):
     print(f"2 - Ornitorrinco. ")
     print(f"3 - Poraque. ")
     print(f"4 - Surpreenda-me! (Aleatório)\n")
-    print(f"4 - Sair da escolha. ")
+    print(f"5 - Sair da escolha. ")
 
     def encerrar_escolha():
         print("Encerrando escolhas! Obrigado!")

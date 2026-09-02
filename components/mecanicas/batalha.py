@@ -5,7 +5,7 @@ def calcular_dano(ataque, defesa, multiplicador= 1.0):
     dano_bruto = (ataque * multiplicador) * (100 / (defesa + 100))
     return max(1, int(dano_bruto))
 
-def iniciar_batalha(aliado, inimigo):
+def iniciar_batalha(aliado, inimigo, jogador):
     print("\n=====================================")
     print(f"\nUm {inimigo.nome} selvagem apareceu!")
     print("\n=====================================")
@@ -25,16 +25,24 @@ def iniciar_batalha(aliado, inimigo):
             print("2 - Ataque especial (não disponível)")
 
         print("3 - Esquivar")
-        print("4 - Fugir do combate")
+        print("4 - Usar Poção de Cura")
+        if jogador.tem_item("Poção de Cura"):
+            print("5 - Fugir do combate")
 
         escolha = input("Escolha sua ação (1 a 4): ")
 
-        if escolha == "4":
+        if escolha == "5":
             print("\n----------------------")
             print("Você fugiu do combate.")
             return
         if escolha == "3":
             acao_aliado = "esquivar"
+        elif escolha == "4" and jogador.tem_item("Poção de Cura"):
+            jogador.usar_item("Poção de Cura")
+            cura = 20
+            aliado.hp = min(aliado.hp + cura, aliado.hp_maximo)
+            print(f"\n{aliado.nome} recuperou {cura} de HP!")
+            acao_aliado = "curar"
         elif escolha == "2" and aliado.energia >= 30:
             acao_aliado = "especial"
         else:
@@ -55,11 +63,17 @@ def iniciar_batalha(aliado, inimigo):
                 print(f"\n{atacante.nome} focou na agilidade e está pronto para esquivar!")
                 time.sleep(1.0)
                 continue
+
+            if acao_atk == "curar":
+                continue
+
             print(f"\n{atacante.nome} usou Ataque {acao_atk.capitalize()}!")
 
             if acao_atk == "basico":
                 dano = calcular_dano(atacante.ataque, defensor.defesa)
                 atacante.energia += 10
+                atacante.energia = min(atacante.energia, atacante.energia_max)
+
             elif acao_atk == "especial":
                 dano = calcular_dano(atacante.ataque, defensor.defesa, multiplicador=1.5)
                 atacante.energia -= 30
@@ -90,5 +104,7 @@ def iniciar_batalha(aliado, inimigo):
 
     if aliado.hp > 0:
         print(f"\nVitória! {inimigo.nome} foi derrotado!")
+        xp_ganho = inimigo.calcular_xp_recompensa()
+        aliado.ganhar_xp(xp_ganho)
     else:
         print(f"\nDerrota! Seu {aliado.nome} desmaiou.")
