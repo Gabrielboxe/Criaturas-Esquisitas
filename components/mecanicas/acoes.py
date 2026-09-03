@@ -3,6 +3,7 @@ from components.mecanicas.batalha import iniciar_batalha
 from components.mecanicas.missoes import gerar_missao
 from components.mecanicas.loja import menu_loja, NOMES_ARMADILHAS
 from components.mecanicas.armadilhas import tentar_capturar
+from components.player.treinador import TAMANHO_MAXIMO_TIME
 
 def menu_explorar(jogador):
     while True:
@@ -80,12 +81,15 @@ def menu_bioma(jogador):
             print("\nComando inválido!")
 
 def encontrar_criatura(jogador, bioma):
+    aliado = escolher_aliado(jogador)
+    if aliado is None:
+        return
+
     inimigo = sortear_criatura_selvagem(bioma)
     if inimigo is None:
         print(f"\nNenhuma criatura foi encontrada em {bioma} dessa vez...")
         return
 
-    aliado = jogador.time[0]
     iniciar_batalha(aliado, inimigo, jogador)
 
     for armadilha in jogador.armadilhas_ativas.values():
@@ -218,5 +222,106 @@ def menu_equipe(jogador):
             break
         else:
             print("Opção inválida!")
+
+def escolher_aliado(jogador):
+    disponiveis = [c for c in jogador.time if c.hp > 0]
+
+    if not disponiveis:
+        print("\nTodas as suas criaturas estão sem HP! Tente curá-las antes de batalhar.")
+        return None
+
+    if len(disponiveis) == 1:
+        return disponiveis[0]
+
+    print("\nQual criatura vai para a batalha?")
+    for i, criatura in enumerate(disponiveis, start=1):
+        print(f"{i} - {criatura.nome} | Nv. {criatura.nivel} | HP {criatura.hp}/{criatura.hp_maximo}")
+
+    escolha = input("Escolha: ")
+    try:
+        return disponiveis[int(escolha) - 1]
+    except (ValueError, IndexError):
+        print("\nComando inválido! Escolha automática ativada.")
+        return disponiveis[0]
+
+def menu_equipe(jogador):
+    while True:
+        print("\n--- MENU EQUIPE ---")
+        print(" 1 - Ver time ")
+        print(" 2 - Ver criaturas disponiveis")
+        print(" 3 - mover criatura do Santuário para o time")
+        print(" 4 - Mover criatura do time para o Santuário")
+        print(" 5 - voltar")
+        sub_opcao = input("Escolha uma opção: ")
+
+        if sub_opcao == "1":
+            print("\n--- SEU TIME ---")
+            if not jogador.time:
+                print("Seu time está vazio.")
+            for criatura in jogador.time:
+                print(f"- - - {criatura.nome} | Nv. {criatura.nivel} | HP {criatura.hp}/{criatura.hp_maximo}")
+
+        elif sub_opcao == "2":
+            print("\n--- CRIATURAS DISPONIVEIS ---")
+            if not jogador.criaturas_capturadas:
+                print("\nVocê ainda não capturou criaturas esquisitas.")
+                return
+            for criatura in jogador.criaturas_capturadas:
+                print(f"{criatura.nome} | Nv. {criatura.nivel} | HP {criatura.hp}")
+
+        elif sub_opcao == "3":
+            mover_para_time(jogador)
+
+        elif sub_opcao == "4":
+            mover_para_santuario(jogador)
+
+        elif sub_opcao == "5":
+            break
+
+        else:
+            print("Opção invalida!")
+
+def mover_para_time(jogador):
+    if not jogador.criaturas_capturadas:
+        print("\nVocê não tem nenhuma criatura no Santuário.")
+        return
+
+    if len(jogador.time) >= TAMANHO_MAXIMO_TIME:
+        print(f"\nSeu time já está cheio (máx. {TAMANHO_MAXIMO_TIME}). Mova alguém para o Santuário primeiro.")
+        return
+
+    print("\n--- CRIATURAS DISPONÍVEIS ---")
+    for i, criatura in enumerate(jogador.criaturas_capturadas, start=1):
+        print(f"{i} - {criatura.nome} | Nv. {criatura.nivel} | HP {criatura.hp}")
+
+    escolha = input("Qual criatura deseja trazer para o time? ")
+    try:
+        criatura = jogador.criaturas_capturadas.pop(int(escolha) - 1)
+    except (ValueError, IndexError):
+        print("\nComando inválido!")
+        return
+
+    jogador.time.append(criatura)
+    print(f"\n{criatura.nome} entrou para o time!")
+
+
+def mover_para_santuario(jogador):
+    if not jogador.time:
+        print("\nSeu time está vazio.")
+        return
+
+    print("\n--- SEU TIME ---")
+    for i, criatura in enumerate(jogador.time, start=1):
+        print(f"{i} - {criatura.nome} | Nv. {criatura.nivel} | HP {criatura.hp}")
+
+    escolha = input("Qual criatura deseja enviar para o Santuário? ")
+    try:
+        criatura = jogador.time.pop(int(escolha) - 1)
+    except (ValueError, IndexError):
+        print("\nComando inválido!")
+        return
+
+    jogador.criaturas_capturadas.append(criatura)
+    print(f"\n{criatura.nome} foi enviada para o Santuário!")
 
 
