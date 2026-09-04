@@ -92,6 +92,9 @@ def encontrar_criatura(jogador, bioma):
 
     iniciar_batalha(aliado, inimigo, jogador)
 
+    if inimigo.hp <= 0:
+        jogador.registrar_derrota_diario(inimigo.nome)
+
     for armadilha in jogador.armadilhas_ativas.values():
         armadilha["pronta"] = True
 
@@ -324,4 +327,17 @@ def mover_para_santuario(jogador):
     jogador.criaturas_capturadas.append(criatura)
     print(f"\n{criatura.nome} foi enviada para o Santuário!")
 
+def menu_diario(jogador):
+    print("\n--- DIARIO DE PESQUISA ---")
+    if not jogador.diario:
+        print("Você ainda não descobriu nenhuma espécie.")
+        return
 
+    for nome_especie, registro in jogador.diario.items():
+        nivel = jogador.nivel_pesquisa(nome_especie)
+        status = []
+        if registro["derrotada"]:
+            status.append("Derrotada")
+        if registro["capturada"]:
+            status.append("Capturada")
+        print(f"{nome_especie} - Nível de pesquisa: {nivel} ({', '.join(status)})")

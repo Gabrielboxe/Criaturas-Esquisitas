@@ -3,7 +3,7 @@ import sys
 import json
 from components.criatura.iniciais import escolher_inicial
 from components.player.treinador import Treinador, Sexo
-from components.mecanicas.acoes import menu_explorar, menu_missoes, menu_equipe
+from components.mecanicas.acoes import menu_explorar, menu_missoes, menu_equipe, menu_diario
 from components.save import salvar_jogo, carregar_jogo
 
 jogador = None
@@ -47,12 +47,12 @@ if jogador is None:
     jogador.adicionar_item("Injeção", 3)
 
 while True:
-    print("\n===== MENU PRINCIPAL =====")
     print("1 - Explorar")
     print("2 - Ver equipe")
     print("3 - Ver inventário")
     print("4 - Salvar Jogo")
-    print("5 - Sair")
+    print("5 - Ver Diário de Pesquisa")
+    print("6 - Sair")
 
     acao = input("Escolha uma opção: ")
 
@@ -72,8 +72,8 @@ while True:
         print("Jogo salvo com sucesso!")
 
     elif acao == "5":
+        menu_diario(jogador)
+
+    elif acao == "6":
         print("Até a próxima!")
         break
-
-    else:
-        print("Opção inválida.")

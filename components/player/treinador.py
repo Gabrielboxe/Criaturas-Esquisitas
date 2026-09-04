@@ -18,9 +18,16 @@ class Treinador:
         self.time = []
         self.criaturas_capturadas = []
         self.armadilhas_ativas = {}
+        self.diario = {}
 
 
     def adicionar_criatura_treinador(self, criatura):
+        if self.possui_especie(criatura.nome):
+            print(f"Você já possui um(a) {criatura.nome}! Soltando ela na natureza...")
+            return
+
+        self.registrar_captura_diario(criatura.nome)
+
         if len(self.time) < TAMANHO_MAXIMO_TIME:
             self.time.append(criatura)
             print(f"{criatura.nome} foi adicionado ao seu time!")
@@ -44,4 +51,25 @@ class Treinador:
 
     def pode_receber_missao(self) -> bool:
         return len(self.missoes) < 3
-    
+
+    def nivel_pesquisa(self, nome_especie: str) -> int:
+        registro = self.diario.get(nome_especie, {"capturada": False, "derrotada": False})
+        return int(registro["capturada"]) + int(registro["derrotada"])
+
+    def registrar_derrota_diario(self, nome_especie: str):
+        registro = self.diario.setdefault(nome_especie, {"capturada": False, "derrotada": False})
+        if not registro["derrotada"]:
+            registro["derrotada"] = True
+            print(f"\n[Diário] {nome_especie} derrotado! Nível de pesquisa progrediu: {self.nivel_pesquisa(nome_especie)}")
+
+    def registrar_captura_diario(self, nome_especie: str):
+        registro = self.diario.setdefault(nome_especie, {"capturada": False, "derrotada": False})
+        if not registro["capturada"]:
+            registro["capturada"] = True
+            print(
+                f"\n[Diário] {nome_especie} capturada! Nível de pesquisa progrediu: {self.nivel_pesquisa(nome_especie)}")
+
+    def possui_especie(self, nome_especie: str) -> bool:
+        no_time = any(c.nome == nome_especie for c in self.time)
+        no_santuario = any(c.nome == nome_especie for c in self.criaturas_capturadas)
+        return no_time or no_santuario

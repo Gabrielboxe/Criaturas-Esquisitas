@@ -2,21 +2,22 @@
   "nome": "mnb",
   "sexo": "Masculino",
   "idade": 16,
-  "dinheiro": 200,
+  "dinheiro": 98000,
   "inventario": {
     "Poção de Cura": 3,
     "Isca de Captura": 3,
-    "Armadilha Especial": 0
+    "Armadilha Especial": 0,
+    "Armadilha Boa": 1
   },
   "criaturas": [
     {
       "nome": "Solenodonte",
-      "hp": 40,
+      "hp": 15,
       "hp_maximo": 40,
       "ataque": 40,
       "defesa": 20,
       "velocidade": 40,
-      "energia": 10,
+      "energia": 20,
       "energia_max": 25,
       "classe": "Rara",
       "biomas": {
@@ -24,7 +25,7 @@
         "Pântano": 15
       },
       "nivel": 6,
-      "xp": 20,
+      "xp": 115,
       "level_up": 123
     },
     {
@@ -40,6 +41,24 @@
       "biomas": {
         "Rio": 60,
         "Pântano": 30
+      },
+      "nivel": 1,
+      "xp": 0,
+      "level_up": 50
+    },
+    {
+      "nome": "Toupeira-Nariz-de-Estrela",
+      "hp": 20,
+      "hp_maximo": 20,
+      "ataque": 15,
+      "defesa": 15,
+      "velocidade": 35,
+      "energia": 15,
+      "energia_max": 15,
+      "classe": "Abundante",
+      "biomas": {
+        "Pântano": 80,
+        "Floresta": 25
       },
       "nivel": 1,
       "xp": 0,
