@@ -85,7 +85,7 @@ def encontrar_criatura(jogador, bioma):
     if aliado is None:
         return
 
-    inimigo = sortear_criatura_selvagem(bioma)
+    inimigo = sortear_criatura_selvagem(bioma, nivel_maximo=aliado.nivel)
     if inimigo is None:
         print(f"\nNenhuma criatura foi encontrada em {bioma} dessa vez...")
         return
@@ -341,3 +341,5 @@ def menu_diario(jogador):
         if registro["capturada"]:
             status.append("Capturada")
         print(f"{nome_especie} - Nível de pesquisa: {nivel} ({', '.join(status)})")
+
+
