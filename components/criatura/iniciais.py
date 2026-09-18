@@ -14,7 +14,8 @@ def gerar_solenodonte():
         velocidade=30,
         energia=15,
         classe="Rara",
-        biomas={"Floresta": 70, "Pântano": 15}
+        biomas={"Floresta": 70, "Pântano": 15},
+        tipo="Florestal",
     )
 
 def gerar_ornitorrinco():
@@ -26,7 +27,8 @@ def gerar_ornitorrinco():
         velocidade=20,
         energia=20,
         classe="Comum",
-        biomas={"Rio": 85, "Pântano": 30}
+        biomas={"Rio": 85, "Pântano": 30},
+        tipo="Anfíbio",
     )
 
 def gerar_poraque():
@@ -37,7 +39,9 @@ def gerar_poraque():
         defesa=10,
         velocidade=30,
         energia=35,
-        classe="Abundante", biomas={"Rio": 90}
+        classe="Abundante",
+        biomas={"Rio": 90},
+        tipo="Aquático",
     )
 
 inicial = None
@@ -45,9 +49,9 @@ inicial = None
 def escolher_inicial(treinador: Treinador):
     print(f"Olá {treinador.nome}! Está na hora de começar sua jornada!")
     print(f"Escolha sua criatura esquisita inicial: ")
-    print(f"1 - Solenodonte. ")
-    print(f"2 - Ornitorrinco. ")
-    print(f"3 - Poraque. ")
+    print("1 - Solenodonte (Florestal) - ataque e velocidade altos, mas frágil.")
+    print("2 - Ornitorrinco (Anfíbio) - equilibrado em tudo.")
+    print("3 - Poraquê (Aquático) - muita energia e velocidade.")
     print(f"4 - Surpreenda-me! (Aleatório)\n")
     print(f"5 - Sair da escolha. ")
 

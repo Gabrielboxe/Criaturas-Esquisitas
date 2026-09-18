@@ -4,6 +4,8 @@ from components.mecanicas.missoes import gerar_missao
 from components.mecanicas.loja import menu_loja, NOMES_ARMADILHAS
 from components.mecanicas.armadilhas import tentar_capturar
 from components.player.treinador import TAMANHO_MAXIMO_TIME
+from components.criatura.criaturas_selvagens import TIPO_POR_ESPECIE
+from components.criatura.tipos import VANTAGENS, fraqueza_de
 
 def menu_explorar(jogador):
     while True:
@@ -214,7 +216,7 @@ def escolher_aliado(jogador):
 
     print("\nQual criatura vai para a batalha?")
     for i, criatura in enumerate(disponiveis, start=1):
-        print(f"{i} - {criatura.nome} | Nv. {criatura.nivel} | HP {criatura.hp}/{criatura.hp_maximo}")
+        print(f"{i} - {criatura.nome} ({criatura.tipo}) | Nv. {criatura.nivel} | HP {criatura.hp}/{criatura.hp_maximo}")
 
     escolha = input("Escolha: ")
     try:
@@ -238,7 +240,7 @@ def menu_equipe(jogador):
             if not jogador.time:
                 print("Seu time está vazio.")
             for criatura in jogador.time:
-                print(f"- - - {criatura.nome} | Nv. {criatura.nivel} | HP {criatura.hp}/{criatura.hp_maximo}")
+                print(f"- - - {criatura.nome} ({criatura.tipo}) | Nv. {criatura.nivel} | HP {criatura.hp}/{criatura.hp_maximo}")
 
         elif sub_opcao == "2":
             print("\n--- CRIATURAS DISPONIVEIS ---")
@@ -246,7 +248,7 @@ def menu_equipe(jogador):
                 print("\nVocê ainda não capturou criaturas esquisitas.")
                 return
             for criatura in jogador.criaturas_capturadas:
-                print(f"{criatura.nome} | Nv. {criatura.nivel} | HP {criatura.hp}")
+                print(f"{criatura.nome} ({criatura.tipo}) | Nv. {criatura.nivel} | HP {criatura.hp}")
 
         elif sub_opcao == "3":
             mover_para_time(jogador)
@@ -271,7 +273,7 @@ def mover_para_time(jogador):
 
     print("\n--- CRIATURAS DISPONÍVEIS ---")
     for i, criatura in enumerate(jogador.criaturas_capturadas, start=1):
-        print(f"{i} - {criatura.nome} | Nv. {criatura.nivel} | HP {criatura.hp}")
+        print(f"{i} - {criatura.nome} ({criatura.tipo}) | Nv. {criatura.nivel} | HP {criatura.hp}")
 
     escolha = input("Qual criatura deseja trazer para o time? ")
     try:
@@ -291,7 +293,7 @@ def mover_para_santuario(jogador):
 
     print("\n--- SEU TIME ---")
     for i, criatura in enumerate(jogador.time, start=1):
-        print(f"{i} - {criatura.nome} | Nv. {criatura.nivel} | HP {criatura.hp}")
+        print(f"{i} - {criatura.nome} ({criatura.tipo}) | Nv. {criatura.nivel} | HP {criatura.hp}")
 
     escolha = input("Qual criatura deseja enviar para o Santuário? ")
     try:
@@ -316,6 +318,9 @@ def menu_diario(jogador):
             status.append("Derrotada")
         if registro["capturada"]:
             status.append("Capturada")
-        print(f"{nome_especie} - Nível de pesquisa: {nivel} ({', '.join(status)})")
+        tipo = TIPO_POR_ESPECIE.get(nome_especie, "Desconhecido")
+        print(f"{nome_especie} ({tipo}) - Nível de pesquisa: {nivel} ({', '.join(status)})")
+        if nivel >= 2:
+            print(f"    Vantagem contra: {VANTAGENS.get(tipo, '?')} | Fraqueza: {fraqueza_de(tipo)}")
 
 

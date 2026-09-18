@@ -2,6 +2,7 @@ import json
 import os
 
 from components.criatura.criatura import Criatura
+from components.criatura.criaturas_selvagens import TIPO_POR_ESPECIE
 from components.mecanicas.missoes import Missao
 from components.player.treinador import Treinador, Sexo
 
@@ -17,6 +18,7 @@ def criatura_para_dict(c):
         "energia": c.energia,
         "energia_max": c.energia_max,
         "classe": c.classe,
+        "tipo": c.tipo,
         "biomas": c.biomas,
         "nivel": c.nivel,
         "xp": c.xp,
@@ -34,6 +36,7 @@ def criatura_de_dict(d):
         energia=d["energia_max"],
         classe=d["classe"],
         biomas=d["biomas"],
+        tipo=d.get("tipo") or TIPO_POR_ESPECIE.get(d["nome"], "Desconhecido"),
     )
     criatura.hp = d["hp"]
     criatura.energia = d["energia"]

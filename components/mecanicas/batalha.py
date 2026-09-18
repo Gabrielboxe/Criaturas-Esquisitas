@@ -1,6 +1,8 @@
 import time
 import random
 
+from components.criatura.tipos import multiplicador_tipo, descrever_efetividade
+
 CUSTO_ESPECIAL = 30
 GANHO_ENERGIA_BASICO = 10
 
@@ -18,15 +20,15 @@ def calcular_dano(ataque, defesa, multiplicador=1.0):
 
 def iniciar_batalha(aliado, inimigo, jogador):
     print("\n=====================================")
-    print(f"\nUm {inimigo.nome} selvagem apareceu!")
+    print(f"\nUm {inimigo.nome} selvagem ({inimigo.tipo}) apareceu!")
     print("\n=====================================")
 
     aliado.energia = 0
     inimigo.energia = 0
 
     while aliado.hp > 0 and inimigo.hp > 0:
-        print(f"\n--- ALIADO {aliado.nome}: HP {aliado.hp} | Energ. {aliado.energia}")
-        print(f"--- INIMIGO {inimigo.nome}: HP {inimigo.hp} | Energ. {inimigo.energia}")
+        print(f"\n--- ALIADO {aliado.nome} ({aliado.tipo}): HP {aliado.hp} | Energ. {aliado.energia}")
+        print(f"--- INIMIGO {inimigo.nome} ({inimigo.tipo}): HP {inimigo.hp} | Energ. {inimigo.energia}")
         print("---------------------------------------------------")
         print(f"\n1 - Ataque basico (+{GANHO_ENERGIA_BASICO} energia)")
 
@@ -82,14 +84,19 @@ def iniciar_batalha(aliado, inimigo, jogador):
                 continue
 
             print(f"\n{atacante.nome} usou Ataque {acao_atk.capitalize()}!")
+            mult_tipo = multiplicador_tipo(atacante.tipo, defensor.tipo)
 
             if acao_atk == "basico":
-                dano = calcular_dano(atacante.ataque, defensor.defesa)
+                dano = calcular_dano(atacante.ataque, defensor.defesa, multiplicador=mult_tipo)
                 atacante.energia = min(atacante.energia + GANHO_ENERGIA_BASICO, limite_energia(atacante))
 
             elif acao_atk == "especial":
-                dano = calcular_dano(atacante.ataque, defensor.defesa, multiplicador=1.5)
+                dano = calcular_dano(atacante.ataque, defensor.defesa, multiplicador=1.5 * mult_tipo)
                 atacante.energia -= CUSTO_ESPECIAL
+
+            efetividade = descrever_efetividade(mult_tipo)
+            if efetividade:
+                print(f"-> {efetividade}")
 
             if acao_def == "esquivar":
                 sorte = random.randint(1, 100)

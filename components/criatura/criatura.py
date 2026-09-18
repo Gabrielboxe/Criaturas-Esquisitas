@@ -20,7 +20,7 @@ NIVEL_MAXIMO_CRIATURA = 15
 
 
 class Criatura:
-    def __init__(self, nome: str, hp: int, ataque: int, defesa: int, velocidade: int, energia: int, classe: str = "Comum", biomas = None):
+    def __init__(self, nome: str, hp: int, ataque: int, defesa: int, velocidade: int, energia: int, classe: str = "Comum", biomas = None, tipo: str = "Desconhecido"):
         self.nome = nome
         self.hp = hp
         self.ataque = ataque
@@ -28,6 +28,7 @@ class Criatura:
         self.velocidade = velocidade
         self.energia = energia
         self.classe = classe
+        self.tipo = tipo
         self.biomas = biomas or {}
 
         self.hp_maximo = hp
@@ -38,7 +39,7 @@ class Criatura:
         self.level_up = 50
 
     def exibir_status_criatura(self):
-        print(f"--==[ {self.nome} ]==--")
+        print(f"--==[ {self.nome} ({self.tipo}) ]==--")
         print(f"-- Vida: {self.hp} / {self.hp_maximo}")
         print(f"-- Ataque {self.ataque} | Defesa: {self.defesa}")
         print(f"-- Velocidade: {self.velocidade} | Energia: {self.energia}")
