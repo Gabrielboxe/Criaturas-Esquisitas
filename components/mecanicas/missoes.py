@@ -1,7 +1,7 @@
 import random
 import components.criatura.criaturas_selvagens
 from components.criatura.criatura import FATOR_XP_POR_CLASSE
-from criatura.criaturas_selvagens import BIOMAS_DISPONIVEIS, sortear_criatura_selvagem
+from components.criatura.criaturas_selvagens import BIOMAS_DISPONIVEIS, sortear_criatura_selvagem
 
 MULTIPLICADOR_DINHEIRO = 4
 

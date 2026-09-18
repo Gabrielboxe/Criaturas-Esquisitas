@@ -5,3 +5,7 @@ __pycache__/
 # Ambiente virtual
 .venv/
 venv/
+
+# Build do executável (PyInstaller)
+build/
+dist/

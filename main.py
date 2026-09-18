@@ -6,6 +6,13 @@ from components.player.treinador import Treinador, Sexo
 from components.mecanicas.acoes import menu_explorar, menu_missoes, menu_equipe, menu_diario
 from components.save import salvar_jogo, carregar_jogo
 
+# Garante que o save.json fique sempre ao lado do executável/script,
+# independentemente da pasta de onde o jogo foi aberto.
+if getattr(sys, "frozen", False):
+    os.chdir(os.path.dirname(sys.executable))
+else:
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 jogador = None
 
 if os.path.exists("save.json"):
