@@ -1,6 +1,6 @@
 import random
 
-from components.criatura.criatura import Criatura
+from components.criatura.criatura import Criatura, NIVEL_MAXIMO_CRIATURA
 
 ESPECIES_SELVAGENS = [
     {"nome": "Diabo-Espinhoso", "hp": 30, "ataque": 15, "defesa": 35, "velocidade": 10, "energia": 10, "classe": "Abundante", "biomas": {"Deserto": 95}},
@@ -19,8 +19,6 @@ ESPECIES_SELVAGENS = [
 
 BIOMAS_DISPONIVEIS = ["Floresta", "Pântano", "Rio", "Caverna", "Deserto", "Oceano"]
 
-NIVEL_MAXIMO_SELVAGEM = 10
-
 
 def criar_criatura_selvagem(especie: dict) -> Criatura:
     return Criatura(
@@ -35,7 +33,7 @@ def criar_criatura_selvagem(especie: dict) -> Criatura:
     )
 
 
-def sortear_criatura_selvagem(bioma: str, nivel_maximo: int =15):
+def sortear_criatura_selvagem(bioma: str, nivel_maximo: int = NIVEL_MAXIMO_CRIATURA):
     candidatas = []
     pesos = []
 
@@ -51,8 +49,8 @@ def sortear_criatura_selvagem(bioma: str, nivel_maximo: int =15):
 
     criatura_sorteada = random.choices(candidatas, weights=pesos, k=1)[0]
 
-    teto = max(1, min(nivel_maximo, 15))
-    nivel_sorteado = random.randint(1, NIVEL_MAXIMO_SELVAGEM)
+    teto = max(1, min(nivel_maximo, NIVEL_MAXIMO_CRIATURA))
+    nivel_sorteado = random.randint(1, teto)
     criatura_sorteada.aplicar_niveis(nivel_sorteado - 1)
 
     return criatura_sorteada

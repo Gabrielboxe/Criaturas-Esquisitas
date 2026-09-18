@@ -16,7 +16,7 @@ FATOR_SPAWN_POR_CLASSE = {
         "Criticamente Rara": 0.25,
 }
 
-NIVEL_MAXIMO_CRAITURA = 15
+NIVEL_MAXIMO_CRIATURA = 15
 
 
 class Criatura:
@@ -52,17 +52,17 @@ class Criatura:
         return afinidade * fator
 
     def ganhar_xp(self, quantidade: int):
-        if self.nivel >= NIVEL_MAXIMO_CRAITURA:
+        if self.nivel >= NIVEL_MAXIMO_CRIATURA:
             return
 
         self.xp += quantidade
         print(f"{self.nome} ganhou {quantidade} de XP!")
 
-        while self.xp >= self.level_up and self.nivel < NIVEL_MAXIMO_CRAITURA:
+        while self.xp >= self.level_up and self.nivel < NIVEL_MAXIMO_CRIATURA:
             self.xp -= self.level_up
             self._subir_nivel()
 
-        if self.nivel >= NIVEL_MAXIMO_CRAITURA:
+        if self.nivel >= NIVEL_MAXIMO_CRIATURA:
             self.xp = 0
 
     def _subir_nivel(self):
@@ -83,7 +83,7 @@ class Criatura:
         return  max(1, round(xp_base * fator *variacao))
 
     def aplicar_niveis(self, quantidade: int):
-        quantidade = min(quantidade, NIVEL_MAXIMO_CRAITURA - self.nivel)
+        quantidade = min(quantidade, NIVEL_MAXIMO_CRIATURA - self.nivel)
         for _ in range(quantidade):
             self.nivel += 1
             self.hp_maximo += 5

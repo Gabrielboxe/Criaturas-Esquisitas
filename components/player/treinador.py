@@ -1,5 +1,4 @@
 from enum import Enum
-from statistics import quantiles
 
 TAMANHO_MAXIMO_TIME = 3
 

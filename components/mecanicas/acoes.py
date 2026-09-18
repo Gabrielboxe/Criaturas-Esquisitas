@@ -92,7 +92,8 @@ def encontrar_criatura(jogador, bioma):
 
     iniciar_batalha(aliado, inimigo, jogador)
 
-    if inimigo.hp <= 0:
+    venceu = inimigo.hp <= 0
+    if venceu:
         jogador.registrar_derrota_diario(inimigo.nome)
 
     for armadilha in jogador.armadilhas_ativas.values():
@@ -103,7 +104,7 @@ def encontrar_criatura(jogador, bioma):
         aliado.hp = aliado.hp_maximo
 
     for missao in jogador.missoes:
-        if not missao.concluida and missao.criatura_alvo.nome == inimigo.nome and aliado.hp > 0:
+        if venceu and not missao.concluida and missao.criatura_alvo.nome == inimigo.nome and missao.bioma == bioma:
             missao.concluida = True
             jogador.dinheiro += missao.recompensa
             print(f"\nMissão concluída! Você recebeu ${missao.recompensa}")
@@ -200,31 +201,6 @@ def curar_equipe(jogador):
         print(f"{criatura.nome} foi curado!")
 
     print(f"\nVocê pagou ${custo_total}. Saldo atual: ${jogador.dinheiro}")
-
-def menu_equipe(jogador):
-    while True:
-        print("\n--- MENU EQUIPE ---")
-        print("1 - Ver time ")
-        print("2 - Ver criaturas disponíveis")
-        print("3 - Voltar")
-        sub_opcao = input("Escolha uma opção: ")
-
-        if sub_opcao == "1":
-            print("\n--- SEU TIME ---")
-            if not jogador.time:
-                print("Seu time está vazio.")
-            for criatura in jogador.time:
-                print(f"{criatura.nome} | Nv. {criatura.nivel} | HP {criatura.hp}")
-        elif sub_opcao == "2":
-            print("\n--- CRIATURAS DISPONIVEIS ---")
-            if not jogador.criaturas_capturadas:
-                print("Você ainda não capturou criaturas esquisitas.")
-            for criatura in jogador.criaturas_capturadas:
-                print(f"{criatura.nome} | Nv. {criatura.nivel} | HP {criatura.hp}")
-        elif sub_opcao == "3":
-            break
-        else:
-            print("Opção inválida!")
 
 def escolher_aliado(jogador):
     disponiveis = [c for c in jogador.time if c.hp > 0]

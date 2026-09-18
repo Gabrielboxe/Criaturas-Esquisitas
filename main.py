@@ -1,6 +1,5 @@
 import os
 import sys
-import json
 from components.criatura.iniciais import escolher_inicial
 from components.player.treinador import Treinador, Sexo
 from components.mecanicas.acoes import menu_explorar, menu_missoes, menu_equipe, menu_diario

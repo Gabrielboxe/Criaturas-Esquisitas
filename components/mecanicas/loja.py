@@ -5,7 +5,7 @@ ITENS_LOJA = {
     "Armadilha Especial": {"preco": 800, "limite": 3},
 }
 
-NOMES_ARMADILHAS = ["Armadilha velha", "Armadilha Boa", "Armadilha Especial"]
+NOMES_ARMADILHAS = [nome for nome in ITENS_LOJA if nome.startswith("Armadilha")]
 
 def menu_loja(jogador):
     while True:
@@ -34,7 +34,7 @@ def menu_loja(jogador):
         quantidade_atual = jogador.inventario.get(nome_item, 0)
 
         if quantidade_atual >= info["limite"]:
-            print(f"\nVocê já possui o máximo de {nome.item} (Qtde: {info['limite']})")
+            print(f"\nVocê já possui o máximo de {nome_item} (Qtde: {info['limite']})")
             continue
         if jogador.dinheiro < info["preco"]:
             print(f"Você não tem dinheiro suficiente! (Saldo: ${jogador.dinheiro})")
